@@ -162,6 +162,41 @@ class Ontology:
         """Get the domain class of a property."""
         return self.property_domain.get(prop)
 
+    def get_superclasses(self, class_uri: str) -> Set[str]:
+        """Get all superclasses of a class (transitive)."""
+        result = set()
+        to_visit = list(self.subclass_of.get(class_uri, set()))
+        while to_visit:
+            cls = to_visit.pop()
+            if cls not in result:
+                result.add(cls)
+                to_visit.extend(self.subclass_of.get(cls, set()))
+        return result
+
+    def get_subclasses(self, class_uri: str) -> Set[str]:
+        """Get all subclasses of a class (transitive)."""
+        result = set()
+        # Build reverse mapping
+        subclasses_of = defaultdict(set)
+        for sub, supers in self.subclass_of.items():
+            for sup in supers:
+                subclasses_of[sup].add(sub)
+
+        to_visit = list(subclasses_of.get(class_uri, set()))
+        while to_visit:
+            cls = to_visit.pop()
+            if cls not in result:
+                result.add(cls)
+                to_visit.extend(subclasses_of.get(cls, set()))
+        return result
+
+    def get_equivalent_classes(self, class_uri: str) -> Set[str]:
+        """Get class and all its super/subclasses for matching."""
+        result = {class_uri}
+        result |= self.get_superclasses(class_uri)
+        result |= self.get_subclasses(class_uri)
+        return result
+
 
 # ============================================================================
 # Key Discovery (SAKey-like Algorithm)
@@ -359,6 +394,7 @@ class GraphKeyBuilder:
         self.sakey = sakey
         self.max_depth = max_depth
         self.key_cache: Dict[str, List[Key]] = {}
+        self.actual_range_classes: Dict[str, Set[str]] = {}  # prop -> actual classes
 
     def extend_key(self, key: Key, depth: int = 0) -> GraphKey:
         """
@@ -379,9 +415,10 @@ class GraphKeyBuilder:
         # Find object properties in the key
         for prop in key.properties:
             if self.ontology.is_object_property(prop):
-                range_class = self.ontology.get_range(prop)
+                # Find actual range classes from the data
+                actual_classes = self._find_actual_range_classes(prop, key.target_class)
 
-                if range_class:
+                for range_class in actual_classes:
                     # Find keys for the range class
                     range_keys = self._get_keys_for_class(range_class)
 
@@ -390,8 +427,34 @@ class GraphKeyBuilder:
                         best_range_key = range_keys[0]
                         extension = self.extend_key(best_range_key, depth + 1)
                         graph_key.extensions[prop] = extension
+                        break  # Use first class that has keys
 
         return graph_key
+
+    def _find_actual_range_classes(self, prop: str, domain_class: str) -> List[str]:
+        """Find actual classes of entities linked via object property in the data."""
+        cache_key = f"{prop}|{domain_class}"
+        if cache_key in self.actual_range_classes:
+            return list(self.actual_range_classes[cache_key])
+
+        range_classes = defaultdict(int)
+        domain_instances = self.kb.get_instances(domain_class)
+
+        for instance in domain_instances:
+            linked_entities = self.kb.get_property_value(instance, prop)
+            for linked in linked_entities:
+                # Find the class of this linked entity
+                entity_classes = self.kb.get_property_value(
+                    linked, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+                )
+                for cls in entity_classes:
+                    range_classes[cls] += 1
+
+        # Sort by frequency and return classes with sufficient instances
+        sorted_classes = sorted(range_classes.keys(), key=lambda c: -range_classes[c])
+        result = [c for c in sorted_classes if range_classes[c] >= 5]
+        self.actual_range_classes[cache_key] = set(result)
+        return result
 
     def _get_keys_for_class(self, class_uri: str) -> List[Key]:
         """Get cached keys for a class or discover them."""
@@ -447,8 +510,8 @@ class EntityLinker:
                 if nested_sigs:
                     sig_parts.append(('nested', prop, tuple(sorted(nested_sigs))))
                 else:
-                    # Fall back to direct values
-                    sig_parts.append(('direct', prop, tuple(sorted(values))))
+                    # No valid nested signatures - skip this entity for this graph key
+                    return None
             else:
                 sig_parts.append(('direct', prop, tuple(sorted(values))))
 
@@ -705,6 +768,14 @@ def main():
 
         for gk in graph_keys[:3]:
             print(f"          - {gk}")
+
+        # Show details of extensions
+        for gk in graph_keys:
+            if gk.extensions:
+                base_name = str(gk.base_key)
+                for prop, ext in gk.extensions.items():
+                    prop_name = prop.split('/')[-1]
+                    print(f"          >> Extension: {base_name} via {prop_name} -> {ext.base_key}")
 
         # Entity linking
         print("    [5.3] Performing entity linking...")
