@@ -48,13 +48,29 @@ Uses SPIMBENCH benchmark dataset with:
 - `Tbox1.nt`: Ontology schema (~11K triples)
 - `refalign.rdf`: Reference entity alignments (299 pairs)
 
-## Results (SPIMBENCH_small)
+## Results
+
+### SPIMBENCH_small (with reference alignment)
 
 | Metric | Simple Keys | Graph Keys |
 |--------|-------------|------------|
 | Precision | 44.75% | 44.75% |
 | Recall | 76.92% | 76.92% |
 | F-measure | 56.58% | 56.58% |
+
+### SPIMBENCH_large (50K triples, no reference alignment)
+
+| Class | Simple Keys | Graph Keys | Gain |
+|-------|-------------|------------|------|
+| NewsItem | 384 | 391 | +7 |
+| Programme | 246 | 248 | +2 |
+| BlogPost | 521 | 536 | +15 |
+| **Total** | **2092** | **2116** | **+24 (+1.15%)** |
+
+Graph key extensions found via object properties:
+- `Key(about)` → `Key(rdf-schema#label)` for NewsItem/Programme
+- `Key(about)` → `Key(name)` for BlogPost
+- `Key(about)` → `Key(rdf-schema#comment)` for BlogPost
 
 ## Architecture
 
@@ -76,4 +92,4 @@ graph_keys.py
 
 ## Author
 
-Idrissa Mahamoudou Dicko - M2 Knowledge Discovery Project
+Idrissa Dicko & Tyler Maroni - M2 Knowledge Discovery Project
