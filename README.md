@@ -92,4 +92,4 @@ graph_keys.py
 
 ## Author
 
-Idrissa Dicko & Tyler Maroni - M2 Knowledge Discovery Project
+Idrissa Dicko & Tyler Marino - M2 Knowledge Discovery Project
