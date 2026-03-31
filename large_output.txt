@@ -1,0 +1,194 @@
+======================================================================
+GRAPH KEYS DISCOVERY AND ENTITY LINKING TOOL
+======================================================================
+
+[1] Loading data...
+    - ABox 1: SPIMBENCH_large/Abox1.nt
+      Loaded 50012 triples
+    - ABox 2: SPIMBENCH_large/Abox2.nt
+      Loaded 49710 triples
+    - TBox: SPIMBENCH_large/Tbox1.nt
+      Loaded 51394 triples
+
+[2] Building knowledge bases...
+    - Found 89 object properties
+    - Found 32 datatype properties
+    - Found 90 classes
+
+[3] Target classes for key discovery:
+    - BlogPost: 785 instances in KB1, 574 in KB2
+    - Theme: 172 instances in KB1, 97 in KB2
+    - Sport: 137 instances in KB1, 137 in KB2
+    - Person_Organisation: 97 instances in KB1, 50 in KB2
+    - Organisation: 185 instances in KB1, 123 in KB2
+
+[4] Loading reference alignment...
+    - 0 reference links
+
+[5] Processing class: BlogPost
+    [5.1] Discovering simple keys (SAKey)...
+          Found 8 simple keys:
+          - Key(title) (exceptions: 0)
+          - Key(altText) (exceptions: 0)
+          - Key(primaryContentOf) (exceptions: 0)
+          - Key(description) (exceptions: 0)
+          - Key(thumbnail) (exceptions: 0)
+    [5.2] Extending to graph keys...
+          Built 8 graph keys (2 with extensions)
+          - Key(title)
+          - Key(altText)
+          - Key(primaryContentOf)
+          >> Extension: Key(about, mentions) via about -> Key(name)
+          >> Extension: Key(about) via about -> Key(rdf-schema#label)
+    [5.3] Performing entity linking...
+          Simple keys: 521 links
+          Graph keys: 537 links
+
+[5] Processing class: Theme
+    [5.1] Discovering simple keys (SAKey)...
+          Found 4 simple keys:
+          - Key(prefferedLabel) (exceptions: 0)
+          - Key(shortLabel) (exceptions: 0)
+          - Key(disambiguationHint) (exceptions: 0)
+          - Key(slug) (exceptions: 0)
+    [5.2] Extending to graph keys...
+          Built 4 graph keys (0 with extensions)
+          - Key(prefferedLabel)
+          - Key(shortLabel)
+          - Key(disambiguationHint)
+    [5.3] Performing entity linking...
+          Simple keys: 71 links
+          Graph keys: 71 links
+
+[5] Processing class: Sport
+    [5.1] Discovering simple keys (SAKey)...
+          Found 2 simple keys:
+          - Key(rdf-schema#comment) (exceptions: 0)
+          - Key(caption) (exceptions: 1)
+    [5.2] Extending to graph keys...
+          Built 2 graph keys (0 with extensions)
+          - Key(rdf-schema#comment)
+          - Key(caption)
+    [5.3] Performing entity linking...
+          Simple keys: 137 links
+          Graph keys: 137 links
+
+[5] Processing class: Person_Organisation
+    [5.1] Discovering simple keys (SAKey)...
+          No simple keys found
+
+[5] Processing class: Organisation
+    [5.1] Discovering simple keys (SAKey)...
+          Found 4 simple keys:
+          - Key(rdf-schema#label) (exceptions: 0)
+          - Key(rdf-schema#comment) (exceptions: 0)
+          - Key(manager) (exceptions: 0)
+          - Key(website) (exceptions: 1)
+    [5.2] Extending to graph keys...
+          Built 4 graph keys (0 with extensions)
+          - Key(rdf-schema#label)
+          - Key(rdf-schema#comment)
+          - Key(manager)
+    [5.3] Performing entity linking...
+          Simple keys: 119 links
+          Graph keys: 119 links
+
+[5] Processing class: Programme
+    [5.1] Discovering simple keys (SAKey)...
+          Found 9 simple keys:
+          - Key(about) (exceptions: 0)
+          - Key(title) (exceptions: 0)
+          - Key(altText) (exceptions: 0)
+          - Key(primaryContentOf) (exceptions: 0)
+          - Key(description) (exceptions: 0)
+    [5.2] Extending to graph keys...
+          Built 9 graph keys (1 with extensions)
+          - Key(about) + [about->Key(rdf-schema#label)]
+          - Key(title)
+          - Key(altText)
+          >> Extension: Key(about) via about -> Key(rdf-schema#label)
+    [5.3] Performing entity linking...
+          Simple keys: 246 links
+          Graph keys: 248 links
+
+[5] Processing class: Event
+    [5.1] Discovering simple keys (SAKey)...
+          Found 2 simple keys:
+          - Key(rdf-schema#label) (exceptions: 0)
+          - Key(rdf-schema#comment) (exceptions: 1)
+    [5.2] Extending to graph keys...
+          Built 2 graph keys (0 with extensions)
+          - Key(rdf-schema#label)
+          - Key(rdf-schema#comment)
+    [5.3] Performing entity linking...
+          Simple keys: 243 links
+          Graph keys: 243 links
+
+[5] Processing class: NewsItem
+    [5.1] Discovering simple keys (SAKey)...
+          Found 8 simple keys:
+          - Key(about) (exceptions: 0)
+          - Key(title) (exceptions: 0)
+          - Key(altText) (exceptions: 0)
+          - Key(primaryContentOf) (exceptions: 0)
+          - Key(description) (exceptions: 0)
+    [5.2] Extending to graph keys...
+          Built 8 graph keys (1 with extensions)
+          - Key(about) + [about->Key(rdf-schema#label)]
+          - Key(title)
+          - Key(altText)
+          >> Extension: Key(about) via about -> Key(rdf-schema#label)
+    [5.3] Performing entity linking...
+          Simple keys: 384 links
+          Graph keys: 391 links
+
+[5] Processing class: Person
+    [5.1] Discovering simple keys (SAKey)...
+          Found 1 simple keys:
+          - Key(name) (exceptions: 1)
+    [5.2] Extending to graph keys...
+          Built 1 graph keys (0 with extensions)
+          - Key(name)
+    [5.3] Performing entity linking...
+          Simple keys: 188 links
+          Graph keys: 188 links
+
+[5] Processing class: Place
+    [5.1] Discovering simple keys (SAKey)...
+          Found 2 simple keys:
+          - Key(name) (exceptions: 0)
+          - Key(rdf-schema#comment) (exceptions: 0)
+    [5.2] Extending to graph keys...
+          Built 2 graph keys (0 with extensions)
+          - Key(name)
+          - Key(rdf-schema#comment)
+    [5.3] Performing entity linking...
+          Simple keys: 183 links
+          Graph keys: 183 links
+
+======================================================================
+EVALUATION RESULTS
+======================================================================
+
+[6] Evaluating simple keys (SAKey-like):
+    - Precision: 0.0000
+    - Recall: 0.0000
+    - F-measure: 0.0000
+    - True Positives: 0
+    - False Positives: 2092
+    - False Negatives: 0
+
+[7] Evaluating graph keys:
+    - Precision: 0.0000
+    - Recall: 0.0000
+    - F-measure: 0.0000
+    - True Positives: 0
+    - False Positives: 2117
+    - False Negatives: 0
+
+[8] Improvement Analysis:
+    - Additional links from graph keys: 25
+    - Links unique to graph keys: 34
+
+======================================================================
+Done!
